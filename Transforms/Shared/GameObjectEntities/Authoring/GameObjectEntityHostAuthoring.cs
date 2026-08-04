@@ -105,12 +105,12 @@ namespace Latios.Transforms
             }
 
             m_editorCachedGuid = m_guid;
-            m_editorInstanceId = GetInstanceID();
+            m_editorInstanceId = GetEntityId().GetHashCode();
         }
 
         bool IsDuplicate()
         {
-            return gameObject.scene.isLoaded && !guid.Equals(default) && m_editorInstanceId != GetInstanceID();
+            return gameObject.scene.isLoaded && !guid.Equals(default) && m_editorInstanceId != GetEntityId().GetHashCode();
         }
 
         bool IsReverted()

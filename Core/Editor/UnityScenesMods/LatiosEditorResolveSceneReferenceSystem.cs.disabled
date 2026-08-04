@@ -43,7 +43,7 @@ namespace Unity.Scenes
     {
         struct AssetDependencyTrackerState : ICleanupComponentData
         {
-            public UnityEditor.GUID SceneAndBuildConfigGUID;
+            public UnityEngine.GUID SceneAndBuildConfigGUID;
         }
 
         EntityQuery m_AddScenes;
@@ -168,7 +168,8 @@ namespace Unity.Scenes
             _SceneHeaderUtility.CleanupHeaders(EntityManager);
 
             bool headerLoadInProgress = false;
-            Entities.WithStructuralChanges().WithNone<DisableSceneResolveAndLoad, ResolvedSectionEntity>().ForEach(
+            // SC Entities 6: WithStructuralChanges removed from Entities API.
+            Entities.WithNone<DisableSceneResolveAndLoad, ResolvedSectionEntity>().ForEach(
                 (Entity sceneEntity, ref RequestSceneHeader requestHeader, ref SceneReference scene,
                  ref ResolvedSceneHash resolvedSceneHash, ref RequestSceneLoaded requestSceneLoaded) =>
             {

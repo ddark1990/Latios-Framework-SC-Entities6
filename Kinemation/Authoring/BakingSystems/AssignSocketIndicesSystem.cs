@@ -33,7 +33,7 @@ namespace Latios.Kinemation.Authoring.Systems
                     var link = bone.GetComponent<HideThis.ShadowCloneTracker>();
                     if (link != null)
                     {
-                        var id = link.source.gameObject.GetInstanceID();
+                        var id = link.source.gameObject.GetEntityId().GetHashCode();
 
                         int i = 0;
                         foreach (var go in gameObjectRefs)

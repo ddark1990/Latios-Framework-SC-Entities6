@@ -265,7 +265,7 @@ namespace Latios.Psyshock
             UnitySim.ContactsBetweenResult result = default;
             result.contactNormal                  = distanceResult.normalB;
 
-            var boxLocalContactNormal = math.InverseRotateFast(boxTransform.rot, -distanceResult.normalB);
+            var boxLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(boxTransform.rot, -distanceResult.normalB);
             PointRayBox.BestFacePlanesAndVertices(in box, boxLocalContactNormal, out var edgePlaneNormals, out var edgePlaneDistances, out var plane, out _);
 
             var  bInATransform     = math.mul(math.inverse(boxTransform), capsuleTransform);

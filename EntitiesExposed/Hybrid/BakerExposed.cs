@@ -9,7 +9,9 @@ namespace Unity.Entities.Exposed
     {
         public static int GetAuthoringInstancedID(this IBaker baker)
         {
-            return baker._State.AuthoringSource.GetInstanceID();
+            // SC Entities 6 / Unity 6000.5: GetInstanceID obsolete → GetEntityId
+            var src = baker._State.AuthoringSource;
+            return src != null ? src.GetEntityId().GetHashCode() : 0;
         }
 
         public static UnityEngine.Object GetAuthoringObjectForDebugDiagnostics(this IBaker baker)

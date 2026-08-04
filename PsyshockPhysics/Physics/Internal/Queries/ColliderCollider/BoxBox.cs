@@ -121,7 +121,7 @@ namespace Latios.Psyshock
                     {
                         aLocalContactNormal = math.normalize(distanceResult.normalA - distanceResult.normalB);
                     }
-                    aLocalContactNormal = math.InverseRotateFast(aTransform.rot, aLocalContactNormal);
+                    aLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(aTransform.rot, aLocalContactNormal);
                     usesContactDir      = true;
                     break;
                 }
@@ -197,7 +197,7 @@ namespace Latios.Psyshock
             {
                 result.contactNormal = math.rotate(aTransform, -aLocalContactNormal);
 
-                var bLocalContactNormal = math.InverseRotateFast(bInATransform.rot, -aLocalContactNormal);
+                var bLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(bInATransform.rot, -aLocalContactNormal);
                 PointRayBox.BestFacePlanesAndVertices(in boxA, aLocalContactNormal, out var aEdgePlaneNormals, out var aEdgePlaneDistances, out var aPlane, out var aVertices);
                 PointRayBox.BestFacePlanesAndVertices(in boxB, bLocalContactNormal, out var bEdgePlaneNormals, out _,                       out var bPlane, out var bVertices);
                 bPlane                                 = mathex.TransformPlane(bInATransform, bPlane);
@@ -272,7 +272,7 @@ namespace Latios.Psyshock
                     {
                         aLocalContactNormal = math.normalize(distanceResult.normalA - distanceResult.normalB);
                     }
-                    aLocalContactNormal = math.InverseRotateFast(aTransform.rot, aLocalContactNormal);
+                    aLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(aTransform.rot, aLocalContactNormal);
                     result              = default;
                 }
             }
@@ -725,7 +725,9 @@ namespace Latios.Psyshock
                 return false;
             }
             var bestIndex = math.tzcnt(math.bitmask(best == bests));
-            var bestId    = bestIndex + math.select(0, 4, math.select(b47Better, a47Better, asBetter)[bestIndex]);  // math.select(8, 0, asBetter[bestIndex]);
+            // SC E6: bool4 math.select overloads lived in MathematicsExpansion (disabled).
+            var pick47    = asBetter[bestIndex] ? a47Better[bestIndex] : b47Better[bestIndex];
+            var bestId    = bestIndex + math.select(0, 4, pick47);
             if (asBetter[bestIndex])
             {
                 float3 hitB = default;
@@ -1075,7 +1077,9 @@ namespace Latios.Psyshock
                 if (best <= maxDistance * maxDistance)
                 {
                     var bestIndex = math.tzcnt(math.bitmask(best == bests));
-                    var bestId = bestIndex + math.select(0, 4, math.select(b47Better, a47Better, asBetter)[bestIndex]);  // math.select(8, 0, asBetter[bestIndex]);
+                    // SC E6: bool4 math.select overloads lived in MathematicsExpansion (disabled).
+                    var pick47 = asBetter[bestIndex] ? a47Better[bestIndex] : b47Better[bestIndex];
+                    var bestId = bestIndex + math.select(0, 4, pick47);
                     if (asBetter[bestIndex])
                     {
                         float3 hitB = default;

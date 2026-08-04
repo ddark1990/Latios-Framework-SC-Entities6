@@ -230,15 +230,11 @@ namespace Latios.Kinemation.Systems
             if (excludeEntityIndices.Length == 0)
                 excludeEntityIndices = default;
 
+            // SC Entities 6 / 6000.5: IncludeExcludeListFilter expects EntityId arrays (not int).
             IncludeExcludeListFilter includeExcludeListFilter = new IncludeExcludeListFilter(
                 entityManager,
-#if UNITY_6000_3_OR_NEWER
-                includeEntityIndices.Reinterpret<int>(),
-                excludeEntityIndices.Reinterpret<int>(),
-#else
                 includeEntityIndices,
                 excludeEntityIndices,
-#endif
                 allocator);
 
             return includeExcludeListFilter;

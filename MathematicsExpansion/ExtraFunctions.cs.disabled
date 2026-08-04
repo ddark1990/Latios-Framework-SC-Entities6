@@ -1,0 +1,101 @@
+using System.Runtime.CompilerServices;
+
+namespace Unity.Mathematics
+{
+    /// <summary>
+    /// SC Entities 6 fork: math expansion via asmref into Unity.Mathematics.
+    /// float3x4 column ctor differs on Unity 6000.5 module types — use field init.
+    /// </summary>
+    public static partial class math
+    {
+        /// <summary>Returns b if c is true, a otherwise.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool select(bool a, bool b, bool c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        /// <summary>Returns b if c is true, a otherwise.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 select(bool2 a, bool2 b, bool c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        /// <summary>Returns b if c is true, a otherwise.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 select(bool3 a, bool3 b, bool c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        /// <summary>Returns b if c is true, a otherwise.</summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 select(bool4 a, bool4 b, bool c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool2 select(bool2 a, bool2 b, bool2 c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool3 select(bool3 a, bool3 b, bool3 c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool4 select(bool4 a, bool4 b, bool4 c)
+        {
+            return a ^ ((a ^ b) & c);
+        }
+
+        /// <summary>
+        /// Vector transformed by inverse of normalized rotation quaternion.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 InverseRotateFast(quaternion normalizedRotation, float3 vector)
+        {
+            return math.rotate(math.conjugate(normalizedRotation), vector);
+        }
+
+        /// <summary>
+        /// Second quaternion rotated by inverse of assumed-normalized first quaternion.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static quaternion InverseRotateFast(quaternion normalizedRotation, quaternion rotationToBeRotated)
+        {
+            return math.mul(math.conjugate(normalizedRotation), rotationToBeRotated);
+        }
+    }
+
+    public partial struct float3x4
+    {
+        public static float3x4 TRS(float3 translation, quaternion rotation, float3 scale)
+        {
+            float3x3 r = new float3x3(rotation);
+            float3x4 m = default;
+            m.c0 = r.c0 * scale.x;
+            m.c1 = r.c1 * scale.y;
+            m.c2 = r.c2 * scale.z;
+            m.c3 = translation;
+            return m;
+        }
+
+        public static float3x4 Scale(float3 scale)
+        {
+            float3x4 m = default;
+            m.c0 = new float3(scale.x, 0f, 0f);
+            m.c1 = new float3(0f, scale.y, 0f);
+            m.c2 = new float3(0f, 0f, scale.z);
+            m.c3 = float3.zero;
+            return m;
+        }
+
+        public static readonly float3x4 identity = Scale(new float3(1f, 1f, 1f));
+    }
+}

@@ -5,9 +5,12 @@ using Latios.Systems;
 using Unity.Collections;
 using Unity.Entities;
 
-#if !ENTITY_STORE_V1
-#error The Latios Framework requires the scripting define ENTITY_STORE_V1 for your safety and wellbeing.
+// SC Entities 6.5 fork: ENTITY_STORE_V1 breaks Unity.Entities.Editor (EntityNameStoreAccess).
+// Upstream required it on Entities 1.4; on 6.5 we leave it off and proceed carefully.
+#if ENTITY_STORE_V1
+// optional on 1.4-style stores only
 #endif
+
 
 namespace Latios
 {

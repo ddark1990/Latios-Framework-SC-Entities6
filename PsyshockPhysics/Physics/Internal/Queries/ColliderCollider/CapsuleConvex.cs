@@ -259,7 +259,7 @@ namespace Latios.Psyshock
             var     dimensions = math.countbits(bitmask);
             if (dimensions == 3)
             {
-                var convexLocalContactNormal = math.InverseRotateFast(convexTransform.rot, -distanceResult.normalB);
+                var convexLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(convexTransform.rot, -distanceResult.normalB);
                 PointRayConvex.BestFacePlane(ref convex.convexColliderBlob.Value,
                                              convexLocalContactNormal * invScale,
                                              distanceResult.featureCodeA,
@@ -355,7 +355,7 @@ namespace Latios.Psyshock
             }
             else  //if (dimensions == 2)
             {
-                var convexLocalContactNormal = math.InverseRotateFast(convexTransform.rot, -distanceResult.normalB);
+                var convexLocalContactNormal = Latios.LatiosMathCompat.InverseRotateFast(convexTransform.rot, -distanceResult.normalB);
 
                 ref var indices2D = ref blob.yz2DVertexIndices;  // bitmask = 6
                 var     plane     = new Plane(new float3(1f, 0f, 0f), 0f);
