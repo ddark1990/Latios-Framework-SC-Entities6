@@ -1,0 +1,27 @@
+{
+  "name": "com.latios.latiosframework",
+  "displayName": "Latios Framework for ECS (SC Entities 6 fork)",
+  "version": "0.15.4-sc.e6.0",
+  "unity": "6000.5",
+  "description": "Survival Chaos fork of Latios Framework 0.15.4 targeting Entities/NetCode 6.5. Upstream Latios does not support Entities 6.4+; this fork is experimental.",
+  "documentationURL": "https://github.com/Dreaming381/Latios-Framework-Documentation",
+  "dependencies": {
+    "com.unity.entities": "6.5.0",
+    "com.unity.entities.graphics": "6.5.0",
+    "com.unity.burst": "1.8.29",
+    "com.unity.collections": "6.5.0",
+    "com.unity.mathematics": "1.4.0",
+    "com.unity.netcode": "6.5.0",
+    "com.unity.transport": "6.5.0"
+  },
+  "keywords": [
+    "dots",
+    "latios",
+    "framework",
+    "ecs",
+    "survival-chaos-fork"
+  ],
+  "author": {
+    "name": "Dreaming I'm Latios (upstream); Survival Chaos fork"
+  }
+}
