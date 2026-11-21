@@ -32,6 +32,8 @@ namespace Latios.InternalSourceGen
             public void* ptr;
         }
 
+        // Burst 2 (Unity 6000.6) only auto-adds this for delegates used in their own assembly; source-generated callers live in other assemblies.
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)]
         public delegate void BurstDispatchCollectionComponentDelegate(ContextPtr context, int operation);
 
         public static void BurstDispatchCollectionComponent<T>(ContextPtr context, int operation) where T : unmanaged, ICollectionComponentSourceGenerated, ICollectionComponent

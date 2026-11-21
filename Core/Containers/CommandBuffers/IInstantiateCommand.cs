@@ -69,6 +69,8 @@ namespace Latios
             }
         }
 
+        // Burst 2 (Unity 6000.6) only auto-adds this for delegates used in their own assembly; source-generated callers live in other assemblies.
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)]
         public delegate void OnPlayback(ref Context context);
 
         /// <summary>
