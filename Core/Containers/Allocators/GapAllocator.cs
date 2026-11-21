@@ -69,7 +69,7 @@ namespace Latios.Unsafe
         {
             unsafe
             {
-                ref var gapsUnsafe = ref *(UnsafeList<uint2>*)NativeListUnsafeUtility.GetInternalListDataPtrUnchecked(ref gaps);
+                ref var gapsUnsafe = ref *gaps.GetUnsafeList();
                 return CoalesceGaps(ref gapsUnsafe, oldSize);
             }
         }
@@ -112,7 +112,7 @@ namespace Latios.Unsafe
         {
             unsafe
             {
-                ref var gapsUnsafe = ref *(UnsafeList<uint2>*)NativeListUnsafeUtility.GetInternalListDataPtrUnchecked(ref gaps);
+                ref var gapsUnsafe = ref *gaps.GetUnsafeList();
                 return TryAllocate(ref gapsUnsafe, countNeeded, ref bufferUsedSize, out newLocation, bufferMaxSize);
             }
         }
