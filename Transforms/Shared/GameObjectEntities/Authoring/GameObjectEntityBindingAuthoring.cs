@@ -286,7 +286,7 @@ namespace Latios.Transforms
 
                     // Try to find a subscene containing the target scene
 #if UNITY_6000_0_OR_NEWER
-                    var allSubscenes = Object.FindObjectsByType<Unity.Scenes.SubScene>(FindObjectsSortMode.None);
+                    var allSubscenes = Object.FindObjectsByType<Unity.Scenes.SubScene>();
 #else
                     var allSubscenes = Object.FindObjectsOfType<Unity.Scenes.SubScene>();
 #endif

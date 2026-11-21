@@ -22,6 +22,8 @@ namespace Latios.Unsafe.InternalSourceGen
             };
         }
 
+        // Burst 2 (Unity 6000.6) only auto-adds this for delegates used in their own assembly; source-generated callers live in other assemblies.
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)]
         public delegate void BurstDispatchVptrDelegate(ContextPtr context, int operation);
 
         public unsafe struct VPtr

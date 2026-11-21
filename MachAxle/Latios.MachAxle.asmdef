@@ -6,9 +6,7 @@
         "Latios.Kinemation",
         "Unity.Entities",
         "Unity.Collections",
-        "Unity.Burst",
-        "Unity.Mathematics",
-        "Unity.Entities.Hybrid"
+        "Unity.Mathematics"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

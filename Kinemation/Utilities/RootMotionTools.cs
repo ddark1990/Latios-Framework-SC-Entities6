@@ -19,8 +19,7 @@ namespace Latios.Kinemation
         /// <param name="blender">A BufferPoseBlender which should contain the sampled root transform at index 0. Index 0 is cleared after reading.</param>
         /// <param name="clip">The clip that was sampled, and from which more samples can be taken.</param>
         /// <param name="previousClipTime">The previous clip time, obtained via LoopToClipTime(), prior to the current sample in index 0.</param>
-        /// <param name="loopCycleTransitions">The signed number of times the clip "wrapped" between the previous time and the current time.
-        /// Backwards playback will result in negative values. Use SkeletonClip.CountLoopCycleTransitions() to obtain this value.</param>
+        /// <param name="loopCycleTransitions">Signed wraps from SkeletonClip.CountLoopCycleTransitions(); backwards playback produces negative values.</param>
         /// <param name="keyframeInterpolationMode">The interpolation mode used when sampling the clip.</param>
         public void Accumulate(ref BufferPoseBlender blender,
                                ref SkeletonClip clip,
@@ -41,8 +40,7 @@ namespace Latios.Kinemation
         /// <param name="skeleton">An optimized skeleton which should contain the sampled root transform at bone index 0. The bone is cleared after reading.</param>
         /// <param name="clip">The clip that was sampled, and from which more samples can be taken.</param>
         /// <param name="previousClipTime">The previous clip time, obtained via LoopToClipTime(), prior to the current sample in index 0.</param>
-        /// <param name="loopCycleTransitions">The signed number of times the clip "wrapped" between the previous time and the current time.
-        /// Backwards playback will result in negative values. Use SkeletonClip.CountLoopCycleTransitions() to obtain this value.</param>
+        /// <param name="loopCycleTransitions">Signed wraps from SkeletonClip.CountLoopCycleTransitions(); backwards playback produces negative values.</param>
         /// <param name="keyframeInterpolationMode">The interpolation mode used when sampling the clip.</param>
         public void Accumulate(ref OptimizedSkeletonAspect skeleton,
                                ref SkeletonClip clip,
@@ -75,7 +73,7 @@ namespace Latios.Kinemation
             var loopCycleTransitions = clip.CountLoopCycleTransitions(currentLoopingTime, previousLoopingTime);
             var currentClipTime      = clip.LoopToClipTime(currentLoopingTime);
             var previousClipTime     = clip.LoopToClipTime(previousLoopingTime);
-            var current              = clip.SampleBone(0, currentClipTime);
+            var current              = clip.SampleBone(0, currentClipTime, keyframeInterpolationMode);
             Accumulate(in current, weight, ref clip, previousClipTime, loopCycleTransitions, keyframeInterpolationMode);
         }
 
@@ -100,33 +98,33 @@ namespace Latios.Kinemation
                 TransformQvvs newDelta;
                 if (Hint.Likely(loopCycleTransitions > 0f))
                 {
-                    var h = RootMotionTools.DeltaBetween(endRoot, previousRoot);
-                    var t = RootMotionTools.DeltaBetween(current, beginRoot);
+                    var headDelta = RootMotionTools.DeltaBetween(endRoot, previousRoot);
+                    var tailDelta = RootMotionTools.DeltaBetween(current, beginRoot);
                     if (Hint.Unlikely(loopCycleTransitions > 1.5f))
                     {
                         var middleDelta = RootMotionTools.DeltaBetween(endRoot, beginRoot);
                         var toAdd       = middleDelta;
                         for (float i = 2.5f; i < loopCycleTransitions; i += 1f)
                             middleDelta = RootMotionTools.ConcatenateDeltas(middleDelta, toAdd);
-                        newDelta        = RootMotionTools.ConcatenateDeltas(RootMotionTools.ConcatenateDeltas(h, middleDelta), t);
+                        newDelta        = RootMotionTools.ConcatenateDeltas(RootMotionTools.ConcatenateDeltas(headDelta, middleDelta), tailDelta);
                     }
                     else
-                        newDelta = RootMotionTools.ConcatenateDeltas(h, t);
+                        newDelta = RootMotionTools.ConcatenateDeltas(headDelta, tailDelta);
                 }
                 else
                 {
-                    var h = RootMotionTools.DeltaBetween(endRoot, current);
-                    var t = RootMotionTools.DeltaBetween(previousRoot, beginRoot);
+                    var headDelta = RootMotionTools.DeltaBetween(beginRoot, previousRoot);
+                    var tailDelta = RootMotionTools.DeltaBetween(current, endRoot);
                     if (Hint.Unlikely(loopCycleTransitions < -1.5f))
                     {
                         var middleDelta = RootMotionTools.DeltaBetween(beginRoot, endRoot);
                         var toAdd       = middleDelta;
-                        for (float i = -2.5f; i < loopCycleTransitions; i -= 1f)
+                        for (float i = -2.5f; i > loopCycleTransitions; i -= 1f)
                             middleDelta = RootMotionTools.ConcatenateDeltas(middleDelta, toAdd);
-                        newDelta        = RootMotionTools.ConcatenateDeltas(RootMotionTools.ConcatenateDeltas(h, middleDelta), t);
+                        newDelta        = RootMotionTools.ConcatenateDeltas(RootMotionTools.ConcatenateDeltas(headDelta, middleDelta), tailDelta);
                     }
                     else
-                        newDelta = RootMotionTools.ConcatenateDeltas(h, t);
+                        newDelta = RootMotionTools.ConcatenateDeltas(headDelta, tailDelta);
                 }
                 newDelta = RootMotionTools.ApplyWeight(newDelta, weight);
                 delta    = RootMotionTools.AddDeltas(delta, newDelta);
@@ -144,9 +142,9 @@ namespace Latios.Kinemation
         {
             get
             {
-                var r = rawDelta;
-                r.NormalizeBone();
-                return r;
+                var result = rawDelta;
+                result.NormalizeBone();
+                return result;
             }
         }
     }
@@ -212,9 +210,7 @@ namespace Latios.Kinemation
         }
 
         /// <summary>
-        /// Sequences two delta transforms together. Use this for dealing with discontinuities when sampling deltas in a single clip such as wrapping,
-        /// or when the time spans multiple adjacent clips played in sequence. Order matters, and the transforms must be normalized.
-        /// You can also use this method to apply deltas to the root transform. The previous root transform should be passed to deltaFirst.
+        /// Combines normalized deltas in playback order across clip boundaries; when applying root motion, pass the previous root as deltaFirst.
         /// </summary>
         /// <param name="deltaFirst">The first delta acquired in the sequence</param>
         /// <param name="deltaSecond">The second delta acquired in the sequence</param>

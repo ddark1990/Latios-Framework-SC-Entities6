@@ -20,6 +20,8 @@ namespace InternalSourceGen
             public static implicit operator ContextPtr(void* rawPte) => new ContextPtr { ptr = rawPte };
         }
 
+        // Burst 2 (Unity 6000.6) only auto-adds this for delegates used in their own assembly; source-generated callers live in other assemblies.
+        [System.Runtime.InteropServices.UnmanagedFunctionPointer(System.Runtime.InteropServices.CallingConvention.Cdecl)]
         public delegate void BurstDispatchScriptDelegate(ContextPtr context, int operation);
     }
 }
