@@ -73,7 +73,7 @@ namespace Latios.Kinemation
             var loopCycleTransitions = clip.CountLoopCycleTransitions(currentLoopingTime, previousLoopingTime);
             var currentClipTime      = clip.LoopToClipTime(currentLoopingTime);
             var previousClipTime     = clip.LoopToClipTime(previousLoopingTime);
-            var current              = clip.SampleBone(0, currentClipTime);
+            var current              = clip.SampleBone(0, currentClipTime, keyframeInterpolationMode);
             Accumulate(in current, weight, ref clip, previousClipTime, loopCycleTransitions, keyframeInterpolationMode);
         }
 
