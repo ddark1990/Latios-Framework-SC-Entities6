@@ -89,21 +89,8 @@ namespace Unity.Entities.Exposed
             return em.GetEntityStorageInfoLookup();
         }
 
-        // SC Entities 6.5: UnityObjectRef stores EntityId (not int instanceId).
-        // Legacy Latios call sites still want an int key for TransformAccessArray etc.
-        public static int InstanceID<T>(this UnityObjectRef<T> unityObjectRef) where T : UnityEngine.Object
-        {
-            T obj = unityObjectRef;
-            if (obj == null)
-                return 0;
-            // GetInstanceID is obsolete on 6000.5; EntityId is the new handle.
-            // Hash for stable-ish int until call sites migrate to EntityId.
-            return obj.GetEntityId().GetHashCode();
-        }
-
-        public static UnityEngine.EntityId AsEntityId<T>(this UnityObjectRef<T> unityObjectRef) where T : UnityEngine.Object
-            => unityObjectRef.Id.entityId;
-
+        // SC Entities 6: UnityObjectRef stores the object's EntityId; read it without resolving the managed object, so Burst callers can use it.
+        public static UnityEngine.EntityId EntityId<T>(this UnityObjectRef<T> unityObjectRef) where T : UnityEngine.Object => unityObjectRef.Id.entityId;
 
         public static Entity GetEntity(this SystemHandle systemHandle) => systemHandle.m_Entity;
 

@@ -233,7 +233,7 @@ namespace Latios.Transforms
                     if (options == ClearParentOptions.TransferLinkedEntityGroup)
                         entitiesToAddToNewLeg = TreeKernels.GetAndRemoveHierarchyEntitiesFromLeg(ref tsa, ref leg, subtree, out matchedAll);
                     else
-                        entitiesToAddToNewLeg = TreeKernels.GetHierarchyEntitiesInLeg(ref tsa, subtree, leg.Reinterpret<Entity>().AsNativeArray(), out matchedAll);
+                        entitiesToAddToNewLeg = TreeKernels.GetHierarchyEntitiesInLeg(ref tsa, subtree, leg.Reinterpret<Entity>().AsNativeArray().AsReadOnlySpan(), out matchedAll);
                     needsCleanup              = !matchedAll;
                 }
 
@@ -1290,7 +1290,7 @@ namespace Latios.Transforms
                 var  childLeg = em.GetBuffer<LinkedEntityGroup>(child, options == SetParentOptions.AttachLinkedEntityGroup);
                 bool matchedAll;
                 if (options == SetParentOptions.AttachLinkedEntityGroup)
-                    entitiesInLegAndHierarchy = TreeKernels.GetHierarchyEntitiesInLeg(ref tsa, hierarchy, childLeg.Reinterpret<Entity>().AsNativeArray(), out matchedAll);
+                    entitiesInLegAndHierarchy = TreeKernels.GetHierarchyEntitiesInLeg(ref tsa, hierarchy, childLeg.Reinterpret<Entity>().AsNativeArray().AsReadOnlySpan(), out matchedAll);
                 else
                 {
                     entitiesInLegAndHierarchy = TreeKernels.GetAndRemoveHierarchyEntitiesFromLeg(ref tsa, ref childLeg, hierarchy, out matchedAll);
