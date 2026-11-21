@@ -70,7 +70,9 @@ namespace Latios.Systems
             syncGroup.AddSystemToUpdateList(managedStructReactive);
 
 #if UNITY_EDITOR
-            BootstrapTools.InjectSystem(TypeManager.GetSystemTypeIndex<AfterLiveBakingSuperSystem>(), world);
+            // AfterLiveBaking parents LiveConversionEditorSystemGroup. Play dummy is WorldFlags.Game.
+            if ((world.Flags & WorldFlags.Editor) == WorldFlags.Editor)
+                BootstrapTools.InjectSystem(TypeManager.GetSystemTypeIndex<AfterLiveBakingSuperSystem>(), world);
 #endif
         }
 

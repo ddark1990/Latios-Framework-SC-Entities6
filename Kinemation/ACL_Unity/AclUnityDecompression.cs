@@ -429,6 +429,7 @@ namespace AclUnity
                 throw new ArgumentOutOfRangeException("Bone or track index exceeds bone or track count in clip");
         }
 
+        // The Android arm64 libAclUnity.so exports the six masked samplers C++-mangled (llvm-nm -D); other ABIs export them plain.
         static class NoExtensions
         {
             const string dllName = AclUnityCommon.dllName;
@@ -456,7 +457,11 @@ namespace AclUnity
                                                            float time,
                                                            byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z16samplePoseMaskedPKvS0_PfPKmfh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void samplePoseMasked(void*  compressedTransformTracks,
                                                        void*  compressedScaleTracks,
                                                        float* aosOutputBuffer,
@@ -464,7 +469,11 @@ namespace AclUnity
                                                        float time,
                                                        byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z28samplePoseMaskedBlendedFirstPKvS0_PfPKmffh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void samplePoseMaskedBlendedFirst(void*  compressedTransformTracks,
                                                                    void*  compressedScaleTracks,
                                                                    float* aosOutputBuffer,
@@ -473,7 +482,11 @@ namespace AclUnity
                                                                    float time,
                                                                    byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z26samplePoseMaskedBlendedAddPKvS0_PfPKmffh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void samplePoseMaskedBlendedAdd(void*  compressedTransformTracks,
                                                                  void*  compressedScaleTracks,
                                                                  float* aosOutputBuffer,
@@ -510,14 +523,22 @@ namespace AclUnity
                                                              float time,
                                                              byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z18sampleFloatsMaskedPKvPfPKmfh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void sampleFloatsMasked(void*  compressedFloatTracks,
                                                          float* floatOutputBuffer,
                                                          ulong* mask,
                                                          float time,
                                                          byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z30sampleFloatsMaskedBlendedFirstPKvPfPKmffh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void sampleFloatsMaskedBlendedFirst(void*  compressedFloatTracks,
                                                                      float* floatOutputBuffer,
                                                                      ulong* mask,
@@ -525,7 +546,11 @@ namespace AclUnity
                                                                      float time,
                                                                      byte keyframeInterpolationMode);
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+            [DllImport(dllName, EntryPoint = "_Z28sampleFloatsMaskedBlendedAddPKvPfPKmffh")]
+#else
             [DllImport(dllName)]
+#endif
             public static extern void sampleFloatsMaskedBlendedAdd(void*  compressedFloatTracks,
                                                                    float* floatOutputBuffer,
                                                                    ulong* mask,

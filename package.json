@@ -10,9 +10,7 @@
     "com.unity.entities.graphics": "6.5.0",
     "com.unity.burst": "1.8.29",
     "com.unity.collections": "6.5.0",
-    "com.unity.mathematics": "1.4.0",
-    "com.unity.netcode": "6.5.0",
-    "com.unity.transport": "6.5.0"
+    "com.unity.mathematics": "1.4.0"
   },
   "keywords": [
     "dots",
